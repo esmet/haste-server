@@ -1,0 +1,6 @@
+haste:
+  image: haste-server
+  tag: latest
+  storage:
+    type: 'file'
+    path: './data'

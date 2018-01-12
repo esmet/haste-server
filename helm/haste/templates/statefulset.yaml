@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: haste
+spec:
+  replicas: 1
+  serviceName: haste
+  template:
+    metadata:
+      labels:
+        app: haste
+    spec:
+      containers:
+      - name: haste
+        image: {{ required "must provide a docker repository" .Values.haste.repository }}/{{ .Values.haste.image }}:{{ .Values.haste.tag }}
+        env:
+        - name: PORT
+          value: '80'
+        - name: HOST
+          value: '0.0.0.0'
+        - name: STORAGE_TYPE
+          value: '{{ .Values.haste.storage.type }}'
+        - name: STORAGE_PATH
+          value: '{{ .Values.haste.storage.path }}'
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 0.3
+          requests:
+            memory: 128Mi
+            cpu: 0.1
+        imagePullPolicy: Always
+      restartPolicy: Always

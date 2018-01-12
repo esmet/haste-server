@@ -41,6 +41,13 @@ if (!config.storage.type) {
   config.storage.type = 'file';
 }
 
+config.storage.type = process.env.STORAGE_TYPE || config.storage.type;
+config.storage.path = process.env.STORAGE_PATH || config.storage.path;
+if (config.storage.type == 'file' && config.storage.expire) {
+  winston.warn('file store cannot set expirations on keys, removing expire from config');
+  delete config.storage.expire;
+}
+
 var Store, preferredStore;
 
 if (process.env.REDISTOGO_URL && config.storage.type === 'redis') {
@@ -52,6 +59,8 @@ else {
   Store = require('./lib/document_stores/' + config.storage.type);
   preferredStore = new Store(config.storage);
 }
+
+winston.info('using storage config: ', config.storage);
 
 // Compress the static javascript assets
 if (config.recompressStaticAssets) {

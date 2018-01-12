@@ -1,0 +1,15 @@
+{{ if .Values.ingress }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: haste
+spec:
+  rules:
+  - host: {{ required "this field is required" .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: haste
+          servicePort: 80
+{{ end }}
