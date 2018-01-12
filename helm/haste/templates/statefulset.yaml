@@ -5,6 +5,17 @@ metadata:
 spec:
   replicas: 1
   serviceName: haste
+  {{ if .Values.haste.volume }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ required "must provide a volume name" .Values.haste.volume.name }}
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: {{ required "must provide a volume size" .Values.haste.volume.size }}
+  {{ end }}
   template:
     metadata:
       labels:
@@ -29,5 +40,10 @@ spec:
           requests:
             memory: 128Mi
             cpu: 0.1
+        {{ if .Values.haste.volume }}
+        volumeMounts:
+        - name: {{ required "must provide a volume name" .Values.haste.volume.name }}
+          mountPath: {{ required "must provide a storage path" .Values.haste.storage.path }}
+        {{ end }}
         imagePullPolicy: Always
       restartPolicy: Always

@@ -4,3 +4,7 @@ haste:
   storage:
     type: 'file'
     path: './data'
+  # For a persistent volume claim, provide values like these:
+  #volume:
+  #  name: volume-name
+  #  size: 50Gi
