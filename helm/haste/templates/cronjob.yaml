@@ -1,0 +1,27 @@
+{{ if .Values.haste.volume }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tmpreaper
+spec:
+  schedule: "0 0 */1 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tmpreaper
+            image: {{ required "must provide a docker repository" .Values.haste.repository }}/{{ .Values.tmpreaper.image }}:{{ .Values.tmpreaper.tag }}
+            command:
+             - "tmpreaper"
+             - {{ required "must provide an interval" .Values.tmpreaper.interval }}
+             - {{ required "must provide a storage path" .Values.haste.storage.path }}
+            volumeMounts:
+              - name: nfs-rtp-tmpreaper                
+                mountPath: {{ required "must provide a storage path" .Values.haste.storage.path }}
+          restartPolicy: OnFailure
+          volumes:
+          - name: nfs-rtp-tmpreaper
+            persistentVolumeClaim:
+              claimName: {{ required "must provide a volume name" .Values.haste.volume.name }}-haste-0
+{{ end }}
