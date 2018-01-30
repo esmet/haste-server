@@ -1,10 +1,12 @@
 {{ if .Values.haste.volume }}
-apiVersion: batch/v1beta1
+apiVersion: batch/v2alpha1
 kind: CronJob
 metadata:
   name: tmpreaper
 spec:
   schedule: "0 0 */1 * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
