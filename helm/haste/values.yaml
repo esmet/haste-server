@@ -3,8 +3,12 @@ haste:
   tag: latest
   storage:
     type: 'file'
-    path: './data'
+    path: '/haste/data'
   # For a persistent volume claim, provide values like these:
-  #volume:
-  #  name: volume-name
-  #  size: 50Gi
+  volume:
+    name: haste-volume
+    size: 50Gi
+tmpreaper:
+  image: tmpreaper
+  tag: latest
+  interval: '7d'
