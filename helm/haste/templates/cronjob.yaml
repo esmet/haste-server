@@ -18,6 +18,13 @@ spec:
              - "tmpreaper"
              - {{ required "must provide an interval" .Values.tmpreaper.interval }}
              - {{ required "must provide a storage path" .Values.haste.storage.path }}
+            resources:
+              limits:
+                memory: 256Mi
+                cpu: 0.3
+              requests:
+                memory: 128Mi
+                cpu: 0.1
             volumeMounts:
               - name: nfs-rtp-tmpreaper                
                 mountPath: {{ required "must provide a storage path" .Values.haste.storage.path }}
